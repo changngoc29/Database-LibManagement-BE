@@ -1,6 +1,8 @@
+import os
+
 db_config = {
     "host":"localhost",
     "user":"root",
-    "password":"trungkien2901",
+    "password":os.environ.get("DB_PASSWORD"),
     "database": "assigment"
 }
