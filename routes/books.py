@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 from database import dbcursor
 
-books = Blueprint("book",__name__,url_prefix="/api/v1/books")
+books = Blueprint("books",__name__,url_prefix="/api/v1/books")
 
 @books.get('/')
 def get_all_books():
