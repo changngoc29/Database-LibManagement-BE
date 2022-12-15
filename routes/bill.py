@@ -64,4 +64,28 @@ def get_type_loan(type):
             bills.append(bill)
     return jsonify(bills)
 
+@bills.get('/return')
+def get_return_bill():
+    dbcursor.execute("SELECT * FROM returnbill")
+    results = dbcursor.fetchall()
+    bills = []
+    for result in results:
+        bill = {
+            "return_bill_id": result[0],
+            "return date": result[1].strftime('%Y-%m-%d %H:%M:%S'),
+            "loan_bill_id": result[2],
+            "staff_id": result[3],
+            "customer_id": result[4]
+        }
+        bills.append(bill)
+    return jsonify(bills)
 
+@bills.post('/return')
+def create_return_bill():
+    staff_id = request.get_json()["staffID"]
+    customer_id = request.get_json()["customerID"]
+    loan_bill_id = request.get_json()["loanbillID"]
+    args = [staff_id, customer_id, loan_bill_id]
+    dbcursor.callproc("create_return_bill", args)
+    mydb.commit()
+    return request.json;
