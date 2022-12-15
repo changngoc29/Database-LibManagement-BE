@@ -47,7 +47,7 @@ def get_type_loan(type):
                 "borrow_time": result[1].strftime('%Y-%m-%d %H:%M:%S'),
                 "due_time": result[2].strftime('%Y-%m-%d %H:%M:%S')
             }
-        bills.append(bill)
+            bills.append(bill)
     return bills
 
 
