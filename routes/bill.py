@@ -1,5 +1,5 @@
-from flask import Blueprint, jsonify
-from database import dbcursor
+from flask import Blueprint, jsonify, request
+from database import dbcursor, mydb
 from datetime import datetime
 
 bills = Blueprint("bills",__name__,url_prefix="/api/v1/bills")
@@ -18,6 +18,20 @@ def get_loan():
         }
         bills.append(bill)
     return jsonify(bills)
+
+@bills.post('/loan')
+def create_loan_bill():
+    staff_id = request.get_json()["staffID"]
+    customer_id = request.get_json()["customerID"]
+    isbn = request.get_json()["ISBN"]
+    typee = request.get_json()["type"]
+    args = [staff_id, customer_id, isbn]
+    if typee=="borrowHome":
+        dbcursor.callproc("create_borrowhome_bill", args)
+    else:
+        dbcursor.callproc("create_readinlibrary_bill", args)
+    mydb.commit()
+    return request.json;
 
 @bills.get('/loan/<type>')
 def get_type_loan(type):
@@ -48,6 +62,6 @@ def get_type_loan(type):
                 "due_time": result[2].strftime('%Y-%m-%d %H:%M:%S')
             }
             bills.append(bill)
-    return bills
+    return jsonify(bills)
 
 
