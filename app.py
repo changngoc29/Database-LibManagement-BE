@@ -6,6 +6,7 @@ from flask_cors import CORS
 from routes.bill import bills
 from routes.fine import fines
 from routes.payment import payments
+from routes.noti import notis
 
 app = Flask(__name__)
 CORS(app)
@@ -16,6 +17,7 @@ app.register_blueprint(staffs)
 app.register_blueprint(bills)
 app.register_blueprint(fines)
 app.register_blueprint(payments)
+app.register_blueprint(notis)
 
 @app.get('/')
 def index():
