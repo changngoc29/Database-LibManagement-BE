@@ -1,11 +1,14 @@
 from flask import Blueprint, jsonify
-from database import dbcursor
+from database import mydb
 from datetime import datetime
+from flask_cors import CORS
 
 fines = Blueprint("fines",__name__,url_prefix="/api/v1/fines")
 
 @fines.get('/')
 def get_all_fines():
+    dbcursor = mydb.cursor()
+
     dbcursor.execute("SELECT * FROM finerecord")
     results = dbcursor.fetchall()
     fines = []
@@ -16,4 +19,7 @@ def get_all_fines():
             "return_bill_id": result[2]
         }
         fines.append(fine)
+    
+    dbcursor.close()
+
     return jsonify(fines)

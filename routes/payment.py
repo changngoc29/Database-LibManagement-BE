@@ -1,11 +1,15 @@
 from flask import Blueprint, jsonify
-from database import dbcursor
+from database import mydb
+from flask_cors import CORS
 from datetime import datetime
 
 payments = Blueprint("payments",__name__,url_prefix="/api/v1/payments")
+CORS(payments)
 
 @payments.get('/')
 def get_all_payments():
+    dbcursor = mydb.cursor()
+
     dbcursor.execute("SELECT * FROM payment")
     results = dbcursor.fetchall()
     payments = []
@@ -17,10 +21,15 @@ def get_all_payments():
             "customer_id": result[3]
         }
         payments.append(payment)
+
+    dbcursor.close()
+
     return jsonify(payments)
 
 @payments.get('/<type>')
 def get_all_specific_payments(type):
+    dbcursor = mydb.cursor()
+
     payments = []
     if type=="fine":
         dbcursor.execute("select * from finepayment bp left join payment p on bp.Payment_ID=p.Payment_ID;")
@@ -46,4 +55,5 @@ def get_all_specific_payments(type):
                 "customer_id": result[5]
             }
             payments.append(payment)
+    dbcursor.close()
     return jsonify(payments)
